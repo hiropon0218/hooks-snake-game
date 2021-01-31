@@ -19,7 +19,7 @@ body {
 }
 
 .App {
-  max-width: calc(9px * 35 + 1px * 2); /* a. (マスの幅) * 個数 + (ボーダーの幅) * 本数 */
+  max-width: calc(9px * 35 + 1px * 2);
   text-align: center;
 }
 
@@ -50,7 +50,7 @@ body {
 
 .field {
   display: flex;
-  flex-wrap: wrap; /* b. */
+  flex-wrap: wrap;
   margin-top: 2px;
   color: white;
   background: #0f1d1d;
@@ -153,9 +153,9 @@ body {
   font-weight: bold;
   padding: 8px 16px;
   font-size: 1rem;
-  text-transform: uppercase;
   transition: all ease .2s;
-}
+  text-transform: uppercase;
+  }
 
 .btn-init,
 .btn-suspended {
@@ -175,4 +175,59 @@ body {
 
 .btn:focus {
   outline: 0;
+}
+
+.btn:active {
+  box-shadow: 0px 0px 0px 0px;
+  transform: translateY(6px);
+}
+
+.btn-init:active,
+.btn-suspended:active {
+  background: #20BD60;
+}
+
+.btn-playing:active {
+  background: #EABC5C;
+}
+
+.btn-gameover:active {
+  background: #DE4064;
+}
+
+.manipulation-panel {
+  margin-top: 2px;
+  display: flex;
+  justify-content: center;
+}
+
+.manipulation-btn {
+  min-width: 106px;
+  margin: 4px 2px;
+  background: #52B4E8;
+  box-shadow: 0px 4px 1px 1px #4293C4, 0px 6px 1px 1px #21507B;
+}
+
+.btn-move:active {
+  background: #4293C4;
+}
+
+.btn-left,
+.btn-right
+{
+  min-width: 106px;
+  width: 106px;
+}
+.btn-left {
+  margin-left: 0;
+}
+.btn-right {
+  margin-right: 0;
+}
+
+.btn-up,
+.btn-down
+{
+  margin-left: 0px;
+  margin-right: 0px;
 }
