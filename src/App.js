@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Navigation from './components/Navigation'
 import Field from './components/Field'
 import Button from './components/Button'
@@ -21,6 +21,13 @@ const Direction = Object.freeze({
   right: 'right',
   left: 'left',
   down: 'down'
+})
+
+const DirectionKeyCodeMap = Object.freeze({
+  37: Direction.left,
+  38: Direction.up,
+  39: Direction.right,
+  40: Direction.down,
 })
 
 const OppositeDirection = Object.freeze({
@@ -98,7 +105,7 @@ function App() {
     setFields(initFields(35, initialPosition))
   }
 
-  const onChangeDirection = (newDirection) => {
+  const onChangeDirection = useCallback((newDirection) => {
     if (status !== GameStatus.playing) {
       return direction
     }
@@ -106,7 +113,20 @@ function App() {
       return
     }
     setDirection(newDirection)
-  }
+  }, [direction ,status])
+ 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      const newDirection = DirectionKeyCodeMap[e.keyCode];
+      if (!newDirection) {
+        return;
+      }
+
+      onChangeDirection(newDirection);
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [onChangeDirection])
 
   const handleMoving = () => {
     const { x, y } = position
