@@ -16,6 +16,27 @@ const GameStatus = Object.freeze({
   gameover: 'gameover'
 })
 
+const Direction = Object.freeze({
+  up: 'up',
+  right: 'right',
+  left: 'left',
+  down: 'down'
+})
+
+const OppositeDirection = Object.freeze({
+  up: 'down',
+  right: 'left',
+  left: 'right',
+  down: 'up'
+})
+
+const Delta = Object.freeze({
+  up: { x: 0, y: -1 },
+  right: { x:  1, y: 0 },
+  left: { x: -1, y: 0 },
+  down: { x: 0, y: 1 },
+})
+
   let timer = undefined
  
   const unsubscribe = () => {
@@ -41,6 +62,7 @@ function App() {
   const [fields, setFields] = useState(initialValues)
   const [position, setPosition] = useState()
   const [status, setStatus] = useState(GameStatus.init)
+  const [direction, setDirection] = useState(Direction.up)
   const [tick, setTick] = useState(0)
 
   useEffect(() => {
@@ -57,7 +79,7 @@ function App() {
     if (!position || status !== GameStatus.playing) {
       return
     }
-    const canContinue = goUp()
+    const canContinue = handleMoving()
      if (!canContinue) {
        setStatus(GameStatus.gameover)
      }
@@ -72,18 +94,33 @@ function App() {
     // setDirection(Direction.up)
     setStatus(GameStatus.init)
     setPosition(initialPosition)
+    setDirection(Direction.up)
     setFields(initFields(35, initialPosition))
   }
 
-  const goUp = () => {
+  const onChangeDirection = (newDirection) => {
+    if (status !== GameStatus.playing) {
+      return direction
+    }
+    if (OppositeDirection[direction] === newDirection) {
+      return
+    }
+    setDirection(newDirection)
+  }
+
+  const handleMoving = () => {
     const { x, y } = position
-    const newPosition = { x, y: y -1 }
+    const delta = Delta[direction]
+    const newPosition = {
+      x: x + delta.x,
+      y: y + delta.y
+    }
      if (isCollision(fields.length, newPosition)) {
        unsubscribe()
        return false
      }
     fields[y][x] = ''
-    fields[newPosition.y][x] = 'snake'
+    fields[newPosition.y][newPosition.x] = 'snake'
     setPosition(newPosition)
     setFields(fields)
     return true
@@ -102,8 +139,8 @@ function App() {
        </main>
        
        <footer className="footer">
-       <Button status={status} onStart={onStart} onRestart={onRestart}/>
-         <ManipulationPanel />
+         <Button status={status} onStart={onStart} onRestart={onRestart}/>
+         <ManipulationPanel onChange={onChangeDirection} />
        </footer>      
     </div>
   );
