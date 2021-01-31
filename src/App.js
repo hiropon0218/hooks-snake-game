@@ -16,8 +16,7 @@ function App() {
        <footer className="footer">
          <Button />
          <ManipulationPanel />
-       </footer>
-      
+       </footer>      
     </div>
   );
 }
