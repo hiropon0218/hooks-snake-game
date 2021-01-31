@@ -65,6 +65,10 @@ const Delta = Object.freeze({
     return false;
   };
 
+  const isEatingMyself = (fields, position) => {
+    return fields[position.y][position.x] === 'snake'
+  }
+
 function App() {
   const [fields, setFields] = useState(initialValues)
   const [body, setBody] = useState([])
@@ -135,7 +139,7 @@ function App() {
       x: x + delta.x,
       y: y + delta.y
     }
-     if (isCollision(fields.length, newPosition)) {
+    if (isCollision(fields.length, newPosition) || isEatingMyself(fields, newPosition)) {
        unsubscribe()
        return false
      }
