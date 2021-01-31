@@ -8,6 +8,9 @@ import { initFields, getFoodPosition } from './utils'
 const initialPosition = { x: 17, y: 17 }
 const initialValues = initFields(35, initialPosition)
 const defaultInterval = 100
+const defaultDifficulty = 3
+
+const Difficulty = [1000, 500, 100, 50, 10]
 
 const GameStatus = Object.freeze({
   init: 'init',
@@ -74,17 +77,19 @@ function App() {
   const [body, setBody] = useState([])
   const [status, setStatus] = useState(GameStatus.init)
   const [direction, setDirection] = useState(Direction.up)
+  const [difficulty, setDifficulty] = useState(defaultDifficulty)
   const [tick, setTick] = useState(0)
 
   useEffect(() => {
     setBody([initialPosition])
 
     // ゲームの中の時間を管理する
+    const interval = Difficulty[difficulty - 1]
     timer = setInterval(() => {
       setTick(tick => tick + 1)
-    }, defaultInterval)
+    }, interval)
     return unsubscribe
-  }, [])
+  }, [difficulty])
 
   useEffect(() => {
     if (body.length === 0 || status !== GameStatus.playing) {
@@ -97,6 +102,8 @@ function App() {
   }, [tick])
 
   const onStart = () => setStatus(GameStatus.playing)
+
+  const onStop = () => setStatus(GameStatus.suspended)
 
   const onRestart = () => {
     timer = setInterval(() => {
@@ -118,6 +125,16 @@ function App() {
     }
     setDirection(newDirection)
   }, [direction ,status])
+
+  const onChangeDifficulty = useCallback((difficulty) => {
+    if (status !== GameStatus.init) {
+      return
+    }
+    if (difficulty < 1 || difficulty > Difficulty.length) {
+      return
+    }
+    setDifficulty(difficulty)
+  }, [status, difficulty])
  
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -165,14 +182,23 @@ function App() {
          <div className="title-container">
            <h1 className="title">Snake Game</h1>
          </div>
-         <Navigation />
+         <Navigation 
+         length={body.length} 
+         difficulty={difficulty} 
+         onChangeDifficulty={onChangeDifficulty}
+         />
        </header>
        <main className="main">
        <Field fields={fields} />
        </main>
        
        <footer className="footer">
-         <Button status={status} onStart={onStart} onRestart={onRestart}/>
+         <Button
+           status={status}
+           onStop={onStop}
+           onStart={onStart}
+           onRestart={onRestart}
+         />
          <ManipulationPanel onChange={onChangeDirection} />
        </footer>      
     </div>
