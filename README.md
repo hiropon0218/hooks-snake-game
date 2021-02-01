@@ -3,4 +3,4 @@
 
 url: https://hiropon0218.github.io/hooks-snake-game/
 
-![image](https://gyazo.com/ff5f50f14999d90a72a1de3db4100756/raw）
+![image](https://gyazo.com/719cf5c7ba1c0c5e57648ebb8c6b20a9/raw)
