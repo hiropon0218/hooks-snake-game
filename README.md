@@ -1,5 +1,6 @@
 # スネークゲーム
 ## React学習用に作成しました。遊んでみてください！
+### キーボードの十字キーでも操作できます。
 
 url: https://hiropon0218.github.io/hooks-snake-game/
 
